@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "379528837689",
+    "project_id": "turistando-65cce",
+    "storage_bucket": "turistando-65cce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379528837689:android:b47ff467292647d3c16be8",
+        "android_client_info": {
+          "package_name": "com.andersonrbernal.turistando"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "379528837689-bsceheb57d1rc2k54vuk2n1s2dn7m02o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.andersonrbernal.turistando",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "379528837689-5a68johgopteehn54bb5aasugmiu1a6c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJuk_vT45xmdMgKkh-GtDq_7rKRkKyRHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "379528837689-5a68johgopteehn54bb5aasugmiu1a6c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "379528837689-bumlpb64kn8d2c4cmfutq77ef3ihv0ql.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.andersonrbernal.turistando"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

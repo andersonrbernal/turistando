@@ -20,6 +20,14 @@
 	<array>
 		<string>en</string>
 		<string>pt</string>
+		<string>es</string>
+		<string>it</string>
+		<string>de</string>
+		<string>zh_Hans</string>
+		<string>zh_Hant</string>
+		<string>ru</string>
+		<string>ja</string>
+		<string>ko</string>
 	</array>
 
 	<key>CFBundleShortVersionString</key>
@@ -27,7 +35,18 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
-	<array>        <dict>
+	<array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.379528837689-bumlpb64kn8d2c4cmfutq77ef3ihv0ql</string>
+                <string>fb608420534826479</string>
+            </array>
+        </dict>
+
+        <dict>
         <key>CFBundleTypeRole</key>
         <string>Editor</string>
         <key>CFBundleURLName</key>
@@ -41,15 +60,41 @@
     <key>FlutterDeepLinkingEnabled</key>
     <true/>
 
+    <key>FacebookAppID</key>
+    <string>608420534826479</string>
+    <key>FacebookDisplayName</key>
+    <string>turistando</string>
 
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 
+	<key>NSCameraUsageDescription</key>
+    <string>In order to take a picture or video, this app requires permission to access the camera.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>In order to upload data, this app requires permission to access the photo library.</string>
 
 
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>fbapi</string>
+      <string>fbapi20130214</string>
+      <string>fbapi20130410</string>
+      <string>fbapi20130702</string>
+      <string>fbapi20131010</string>
+      <string>fbapi20131219</string>
+      <string>fbapi20140410</string>
+      <string>fbapi20140116</string>
+      <string>fbapi20150313</string>
+      <string>fbapi20150629</string>
+      <string>fbapi20160328</string>
+      <string>fbauth</string>
+      <string>fb-messenger-share-api</string>
+      <string>fbauth2</string>
+      <string>fbshareextension</string>
 
+    </array>
 
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

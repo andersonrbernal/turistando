@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
+import '/backend/backend.dart';
+import '/backend/schema/structs/index.dart';
 
 import '../../auth/base_auth_user_provider.dart';
 
@@ -76,17 +78,44 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       initialLocation: '/',
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
-      errorBuilder: (context, state) => appStateNotifier.loggedIn ? () : (),
+      errorBuilder: (context, state) =>
+          appStateNotifier.loggedIn ? TourismsPageWidget() : AuthPageWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
-          builder: (context, _) => appStateNotifier.loggedIn ? () : (),
+          builder: (context, _) => appStateNotifier.loggedIn
+              ? TourismsPageWidget()
+              : AuthPageWidget(),
         ),
         FFRoute(
-          name: 'HomePage',
-          path: '/homePage',
-          builder: (context, params) => HomePageWidget(),
+          name: 'TourismsPage',
+          path: '/tourismsPage',
+          requireAuth: true,
+          builder: (context, params) => TourismsPageWidget(),
+        ),
+        FFRoute(
+          name: 'AuthPage',
+          path: '/authPage',
+          builder: (context, params) => AuthPageWidget(),
+        ),
+        FFRoute(
+          name: 'ProfilePage',
+          path: '/profilePage',
+          requireAuth: true,
+          builder: (context, params) => ProfilePageWidget(),
+        ),
+        FFRoute(
+          name: 'ResetPasswordPage',
+          path: '/resetPasswordPage',
+          requireAuth: true,
+          builder: (context, params) => ResetPasswordPageWidget(),
+        ),
+        FFRoute(
+          name: 'NiggaView',
+          path: '/niggaView',
+          requireAuth: true,
+          builder: (context, params) => NiggaViewWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -205,6 +234,7 @@ class FFParameters {
     String paramName,
     ParamType type, [
     bool isList = false,
+    List<String>? collectionNamePath,
   ]) {
     if (futureParamValues.containsKey(paramName)) {
       return futureParamValues[paramName];
@@ -218,11 +248,8 @@ class FFParameters {
       return param;
     }
     // Return serialized value.
-    return deserializeParam<T>(
-      param,
-      type,
-      isList,
-    );
+    return deserializeParam<T>(param, type, isList,
+        collectionNamePath: collectionNamePath);
   }
 }
 
@@ -255,7 +282,7 @@ class FFRoute {
 
           if (requireAuth && !appStateNotifier.loggedIn) {
             appStateNotifier.setRedirectLocationIfUnset(state.location);
-            return '/';
+            return '/authPage';
           }
           return null;
         },
@@ -268,15 +295,11 @@ class FFRoute {
                 )
               : builder(context, ffParams);
           final child = appStateNotifier.loading
-              ? Center(
-                  child: SizedBox(
-                    width: 50.0,
-                    height: 50.0,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        FlutterFlowTheme.of(context).primary,
-                      ),
-                    ),
+              ? Container(
+                  color: FlutterFlowTheme.of(context).secondary,
+                  child: Image.asset(
+                    'assets/images/turistando-icone-PhotoRoom.png-PhotoRoom.png',
+                    fit: BoxFit.contain,
                   ),
                 )
               : page;

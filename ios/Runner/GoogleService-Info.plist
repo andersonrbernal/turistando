@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>379528837689-bumlpb64kn8d2c4cmfutq77ef3ihv0ql.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.379528837689-bumlpb64kn8d2c4cmfutq77ef3ihv0ql</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>379528837689-bsceheb57d1rc2k54vuk2n1s2dn7m02o.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD-4JNdQZbTNuusAPS3QEbdtNbQ8LruFSQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>379528837689</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.andersonrbernal.turistando</string>
+	<key>PROJECT_ID</key>
+	<string>turistando-65cce</string>
+	<key>STORAGE_BUCKET</key>
+	<string>turistando-65cce.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:379528837689:ios:acec3d4df0e572b2c16be8</string>
+</dict>
+</plist>
