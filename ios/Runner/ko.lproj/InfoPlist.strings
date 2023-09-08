@@ -1,1 +1,2 @@
-
+PermissionGroupNotification = "귀하에게 알림을 보낼 수 있도록 허가해 주십시오.";
+NSLocationWhenInUseUsageDescription = "귀하의 위치를 ​​추적할 수 있는 권한을 부여해 주십시오.";

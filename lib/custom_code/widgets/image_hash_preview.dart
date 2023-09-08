@@ -5,14 +5,15 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom widgets
 import '/custom_code/actions/index.dart'; // Imports custom actions
+import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
 import 'package:flutter_blurhash/flutter_blurhash.dart';
 
-class NewCustomWidget extends StatefulWidget {
-  const NewCustomWidget({
+class ImageHashPreview extends StatefulWidget {
+  const ImageHashPreview({
     Key? key,
     this.width,
     this.height,
@@ -26,10 +27,10 @@ class NewCustomWidget extends StatefulWidget {
   final String imageHash;
 
   @override
-  _NewCustomWidgetState createState() => _NewCustomWidgetState();
+  _ImageHashPreviewState createState() => _ImageHashPreviewState();
 }
 
-class _NewCustomWidgetState extends State<NewCustomWidget> {
+class _ImageHashPreviewState extends State<ImageHashPreview> {
   @override
   Widget build(BuildContext context) {
     return BlurHash(

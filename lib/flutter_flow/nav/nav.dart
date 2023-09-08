@@ -1,13 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 
 import '../../auth/base_auth_user_provider.dart';
-
+import '../../backend/push_notifications/push_notifications_handler.dart'
+    show PushNotificationsHandler;
 import '/index.dart';
 import '/main.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -78,21 +80,22 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       initialLocation: '/',
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
-      errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? TourismsPageWidget() : AuthPageWidget(),
+      errorBuilder: (context, state) => appStateNotifier.loggedIn
+          ? TouristAttractionsPageWidget()
+          : AuthPageWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) => appStateNotifier.loggedIn
-              ? TourismsPageWidget()
+              ? TouristAttractionsPageWidget()
               : AuthPageWidget(),
         ),
         FFRoute(
-          name: 'TourismsPage',
+          name: 'TouristAttractionsPage',
           path: '/tourismsPage',
           requireAuth: true,
-          builder: (context, params) => TourismsPageWidget(),
+          builder: (context, params) => TouristAttractionsPageWidget(),
         ),
         FFRoute(
           name: 'AuthPage',
@@ -106,16 +109,40 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => ProfilePageWidget(),
         ),
         FFRoute(
+          name: 'TouristAttractionDetailsPage',
+          path: '/touristAttractionDetailsPage',
+          requireAuth: true,
+          builder: (context, params) => TouristAttractionDetailsPageWidget(
+            title: params.getParam('title', ParamType.String),
+            timezone: params.getParam('timezone', ParamType.String),
+            description: params.getParam('description', ParamType.String),
+            imageUrl: params.getParam('imageUrl', ParamType.String),
+            location: params.getParam('location', ParamType.LatLng),
+          ),
+        ),
+        FFRoute(
+          name: 'NotificationSettingsPage',
+          path: '/notificationSettingsPage',
+          requireAuth: true,
+          builder: (context, params) => NotificationSettingsPageWidget(),
+        ),
+        FFRoute(
+          name: 'LanguageSettingsPage',
+          path: '/languageSettingsPage',
+          requireAuth: true,
+          builder: (context, params) => LanguageSettingsPageWidget(),
+        ),
+        FFRoute(
           name: 'ResetPasswordPage',
           path: '/resetPasswordPage',
           requireAuth: true,
           builder: (context, params) => ResetPasswordPageWidget(),
         ),
         FFRoute(
-          name: 'NiggaView',
-          path: '/niggaView',
+          name: 'ChangePhoneSettingsPage',
+          path: '/changePhoneSettingsPage',
           requireAuth: true,
-          builder: (context, params) => NiggaViewWidget(),
+          builder: (context, params) => ChangePhoneSettingsPageWidget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -296,13 +323,16 @@ class FFRoute {
               : builder(context, ffParams);
           final child = appStateNotifier.loading
               ? Container(
-                  color: FlutterFlowTheme.of(context).secondary,
-                  child: Image.asset(
-                    'assets/images/turistando-icone-PhotoRoom.png-PhotoRoom.png',
-                    fit: BoxFit.contain,
+                  color: FlutterFlowTheme.of(context).primaryText,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/turistando-icone-PhotoRoom.png-PhotoRoom.png',
+                      width: MediaQuery.sizeOf(context).width * 0.8,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 )
-              : page;
+              : PushNotificationsHandler(child: page);
 
           final transitionInfo = state.transitionInfo;
           return transitionInfo.hasTransition

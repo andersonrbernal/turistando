@@ -1,1 +1,2 @@
-
+PermissionGroupNotification = "Per favore, dacci il permesso di inviarti notifiche.";
+NSLocationWhenInUseUsageDescription = "Per favore, dacci il permesso di tracciare la tua posizione.";

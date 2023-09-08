@@ -1,1 +1,2 @@
-
+PermissionGroupNotification = "请允许我们向您发送通知。";
+NSLocationWhenInUseUsageDescription = "请允许我们跟踪您的位置。";

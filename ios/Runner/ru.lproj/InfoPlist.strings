@@ -1,1 +1,2 @@
-
+PermissionGroupNotification = "Пожалуйста, дайте нам разрешение на отправку вам уведомлений.";
+NSLocationWhenInUseUsageDescription = "Пожалуйста, дайте нам разрешение отслеживать ваше местоположение.";
