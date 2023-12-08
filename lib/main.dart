@@ -25,6 +25,7 @@ void main() async {
   await initFirebase();
 
   await FlutterFlowTheme.initialize();
+
   await FFLocalizations.initialize();
 
   final appState = FFAppState(); // Initialize FFAppState

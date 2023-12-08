@@ -122,12 +122,18 @@ final parametersBuilderMap =
           'description': getParameter<String>(data, 'description'),
           'imageUrl': getParameter<String>(data, 'imageUrl'),
           'location': getParameter<LatLng>(data, 'location'),
+          'locationId': getParameter<String>(data, 'locationId'),
         },
       ),
   'NotificationSettingsPage': ParameterData.none(),
   'LanguageSettingsPage': ParameterData.none(),
   'ResetPasswordPage': ParameterData.none(),
   'ChangePhoneSettingsPage': ParameterData.none(),
+  'TouristAttractionReviewsPage': (data) async => ParameterData(
+        allParams: {
+          'locationId': getParameter<String>(data, 'locationId'),
+        },
+      ),
 };
 
 Map<String, dynamic> getInitialParameterData(Map<String, dynamic> data) {

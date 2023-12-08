@@ -1,6 +1,7 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -10,19 +11,18 @@ export 'tourist_attraction_model.dart';
 class TouristAttractionWidget extends StatefulWidget {
   const TouristAttractionWidget({
     Key? key,
-    this.imageUrl,
-    this.location,
-    this.name,
-    this.description,
-    String? stars,
-  })  : this.stars = stars ?? '0',
-        super(key: key);
+    required this.imageUrl,
+    required this.location,
+    required this.name,
+    required this.locationString,
+    required this.timezone,
+  }) : super(key: key);
 
   final String? imageUrl;
   final String? location;
   final String? name;
-  final String? description;
-  final String stars;
+  final String? locationString;
+  final String? timezone;
 
   @override
   _TouristAttractionWidgetState createState() =>
@@ -42,6 +42,8 @@ class _TouristAttractionWidgetState extends State<TouristAttractionWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => TouristAttractionModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -90,19 +92,14 @@ class _TouristAttractionWidgetState extends State<TouristAttractionWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        widget.name!,
+                        widget.name!.maybeHandleOverflow(
+                          maxChars: 30,
+                          replacement: '…',
+                        ),
                         style: FlutterFlowTheme.of(context).bodyLarge.override(
                               fontFamily: 'Poppins',
                               color: FlutterFlowTheme.of(context).primaryText,
                             ),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
-                        child: Text(
-                          widget.location!,
-                          style: FlutterFlowTheme.of(context).titleLarge,
-                        ),
                       ),
                     ],
                   ),
@@ -115,7 +112,10 @@ class _TouristAttractionWidgetState extends State<TouristAttractionWidget> {
                     children: [
                       Expanded(
                         child: Text(
-                          widget.description!,
+                          widget.locationString!.maybeHandleOverflow(
+                            maxChars: 30,
+                            replacement: '…',
+                          ),
                           style: FlutterFlowTheme.of(context).labelMedium,
                         ),
                       ),
@@ -123,14 +123,12 @@ class _TouristAttractionWidgetState extends State<TouristAttractionWidget> {
                         padding:
                             EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 4.0, 0.0),
                         child: Text(
-                          widget.stars,
+                          widget.timezone!.maybeHandleOverflow(
+                            maxChars: 30,
+                            replacement: '…',
+                          ),
                           style: FlutterFlowTheme.of(context).labelMedium,
                         ),
-                      ),
-                      Icon(
-                        Icons.star_rounded,
-                        color: FlutterFlowTheme.of(context).secondaryText,
-                        size: 24.0,
                       ),
                     ],
                   ),

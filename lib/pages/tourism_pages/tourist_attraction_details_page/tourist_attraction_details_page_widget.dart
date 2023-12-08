@@ -5,8 +5,8 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/lat_lng.dart';
-import 'package:map_launcher/map_launcher.dart' as $ml;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_search/mapbox_search.dart';
@@ -22,6 +22,7 @@ class TouristAttractionDetailsPageWidget extends StatefulWidget {
     required this.description,
     required this.imageUrl,
     required this.location,
+    required this.locationId,
   }) : super(key: key);
 
   final String? title;
@@ -29,6 +30,7 @@ class TouristAttractionDetailsPageWidget extends StatefulWidget {
   final String? description;
   final String? imageUrl;
   final LatLng? location;
+  final String? locationId;
 
   @override
   _TouristAttractionDetailsPageWidgetState createState() =>
@@ -48,6 +50,7 @@ class _TouristAttractionDetailsPageWidgetState
 
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'TouristAttractionDetailsPage'});
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -59,10 +62,21 @@ class _TouristAttractionDetailsPageWidgetState
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -126,6 +140,14 @@ class _TouristAttractionDetailsPageWidgetState
                                     width: double.infinity,
                                     height: 230.0,
                                     fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Image.asset(
+                                      'assets/images/error_image.png',
+                                      width: double.infinity,
+                                      height: 230.0,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -177,22 +199,23 @@ class _TouristAttractionDetailsPageWidgetState
                                       ),
                                 ),
                               ),
-                              FlutterFlowAdBanner(
-                                width: double.infinity,
-                                height: 50.0,
-                                showsTestAd: true,
-                              ),
+                              if (isWeb != true)
+                                FlutterFlowAdBanner(
+                                  width: double.infinity,
+                                  height: 50.0,
+                                  showsTestAd: true,
+                                ),
                               Align(
                                 alignment: AlignmentDirectional(0.00, 0.00),
                                 child: Padding(
                                   padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 16.0, 0.0, 0.0),
+                                      0.0, 18.0, 0.0, 0.0),
                                   child: FlutterFlowStaticMap(
                                     location: widget.location!,
                                     apiKey:
                                         'pk.eyJ1IjoiYW5kZXJzb24tYmVybmFsIiwiYSI6ImNsbTd5cGg2ejA0b2gzam56djBudHl4d3QifQ.kUjVYkgpSg1A-bVoQcQjew',
                                     style: MapBoxStyle.Light,
-                                    width: 300.0,
+                                    width: double.infinity,
                                     height: 300.0,
                                     fit: BoxFit.cover,
                                     borderRadius: BorderRadius.circular(0.0),
@@ -219,18 +242,30 @@ class _TouristAttractionDetailsPageWidgetState
                     child: FFButtonWidget(
                       onPressed: () async {
                         logFirebaseEvent(
-                            'TOURIST_ATTRACTION_DETAILS_SE_ON_MAP_BTN');
-                        logFirebaseEvent('Button_launch_map');
-                        await launchMap(
-                          location: widget.location,
-                          title: widget.title!,
+                            'TOURIST_ATTRACTION_DETAILS_SEE_REVIEWS_B');
+                        logFirebaseEvent('Button_navigate_to');
+
+                        context.pushNamed(
+                          'TouristAttractionReviewsPage',
+                          queryParameters: {
+                            'locationId': serializeParam(
+                              widget.locationId,
+                              ParamType.String,
+                            ),
+                          }.withoutNulls,
+                          extra: <String, dynamic>{
+                            kTransitionInfoKey: TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.leftToRight,
+                            ),
+                          },
                         );
                       },
                       text: FFLocalizations.of(context).getText(
-                        'djcfwre5' /* Se on map */,
+                        'djcfwre5' /* See reviews */,
                       ),
                       icon: Icon(
-                        Icons.location_pin,
+                        Icons.reviews,
                         color: FlutterFlowTheme.of(context).info,
                         size: 15.0,
                       ),

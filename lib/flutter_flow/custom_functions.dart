@@ -13,9 +13,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '/backend/schema/structs/index.dart';
 import '/auth/firebase_auth/auth_util.dart';
 
-String formatLocation(
+LatLng formatLocation(
   String latitude,
   String longitude,
 ) {
-  return '$latitude, $longitude';
+  // A function that converts two strings into LatLng.
+  double _latitude = double.parse(latitude);
+  double _longitude = double.parse(longitude);
+  return LatLng(_latitude, _longitude);
 }

@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
 
-import '../../auth/base_auth_user_provider.dart';
-import '../../backend/push_notifications/push_notifications_handler.dart'
+import '/auth/base_auth_user_provider.dart';
+
+import '/backend/push_notifications/push_notifications_handler.dart'
     show PushNotificationsHandler;
 import '/index.dart';
 import '/main.dart';
@@ -118,6 +120,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             description: params.getParam('description', ParamType.String),
             imageUrl: params.getParam('imageUrl', ParamType.String),
             location: params.getParam('location', ParamType.LatLng),
+            locationId: params.getParam('locationId', ParamType.String),
           ),
         ),
         FFRoute(
@@ -135,7 +138,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'ResetPasswordPage',
           path: '/resetPasswordPage',
-          requireAuth: true,
           builder: (context, params) => ResetPasswordPageWidget(),
         ),
         FFRoute(
@@ -143,6 +145,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: '/changePhoneSettingsPage',
           requireAuth: true,
           builder: (context, params) => ChangePhoneSettingsPageWidget(),
+        ),
+        FFRoute(
+          name: 'TouristAttractionReviewsPage',
+          path: '/touristAttractionReviewsPage',
+          requireAuth: true,
+          builder: (context, params) => TouristAttractionReviewsPageWidget(
+            locationId: params.getParam('locationId', ParamType.String),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );
@@ -368,4 +378,24 @@ class TransitionInfo {
   final Alignment? alignment;
 
   static TransitionInfo appDefault() => TransitionInfo(hasTransition: false);
+}
+
+class RootPageContext {
+  const RootPageContext(this.isRootPage, [this.errorRoute]);
+  final bool isRootPage;
+  final String? errorRoute;
+
+  static bool isInactiveRootPage(BuildContext context) {
+    final rootPageContext = context.read<RootPageContext?>();
+    final isRootPage = rootPageContext?.isRootPage ?? false;
+    final location = GoRouter.of(context).location;
+    return isRootPage &&
+        location != '/' &&
+        location != rootPageContext?.errorRoute;
+  }
+
+  static Widget wrap(Widget child, {String? errorRoute}) => Provider.value(
+        value: RootPageContext(true, errorRoute),
+        child: child,
+      );
 }

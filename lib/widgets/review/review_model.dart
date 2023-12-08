@@ -1,13 +1,14 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'tourist_attraction_widget.dart' show TouristAttractionWidget;
+import 'review_widget.dart' show ReviewWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class TouristAttractionModel extends FlutterFlowModel<TouristAttractionWidget> {
+class ReviewModel extends FlutterFlowModel<ReviewWidget> {
   /// Initialization and disposal methods.
 
   void initState(BuildContext context) {}

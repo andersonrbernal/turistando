@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
+import 'auth_page_widget.dart' show AuthPageWidget;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class AuthPageModel extends FlutterFlowModel {
+class AuthPageModel extends FlutterFlowModel<AuthPageWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
@@ -26,9 +27,11 @@ class AuthPageModel extends FlutterFlowModel {
       tabBarController != null ? tabBarController!.index : 0;
 
   // State field(s) for email_login widget.
+  FocusNode? emailLoginFocusNode;
   TextEditingController? emailLoginController;
   String? Function(BuildContext, String?)? emailLoginControllerValidator;
   // State field(s) for password_login widget.
+  FocusNode? passwordLoginFocusNode;
   TextEditingController? passwordLoginController;
   late bool passwordLoginVisibility;
   String? Function(BuildContext, String?)? passwordLoginControllerValidator;
@@ -38,6 +41,7 @@ class AuthPageModel extends FlutterFlowModel {
   String uploadedFileUrl = '';
 
   // State field(s) for username_create widget.
+  FocusNode? usernameCreateFocusNode;
   TextEditingController? usernameCreateController;
   String? Function(BuildContext, String?)? usernameCreateControllerValidator;
   String? _usernameCreateControllerValidator(
@@ -67,6 +71,7 @@ class AuthPageModel extends FlutterFlowModel {
   }
 
   // State field(s) for email_create widget.
+  FocusNode? emailCreateFocusNode;
   TextEditingController? emailCreateController;
   String? Function(BuildContext, String?)? emailCreateControllerValidator;
   String? _emailCreateControllerValidator(BuildContext context, String? val) {
@@ -95,9 +100,11 @@ class AuthPageModel extends FlutterFlowModel {
   }
 
   // State field(s) for photo_number_create widget.
+  FocusNode? photoNumberCreateFocusNode;
   TextEditingController? photoNumberCreateController;
   String? Function(BuildContext, String?)? photoNumberCreateControllerValidator;
   // State field(s) for password_create widget.
+  FocusNode? passwordCreateFocusNode;
   TextEditingController? passwordCreateController;
   late bool passwordCreateVisibility;
   String? Function(BuildContext, String?)? passwordCreateControllerValidator;
@@ -124,6 +131,7 @@ class AuthPageModel extends FlutterFlowModel {
   }
 
   // State field(s) for password_confirmation_create widget.
+  FocusNode? passwordConfirmationCreateFocusNode;
   TextEditingController? passwordConfirmationCreateController;
   late bool passwordConfirmationCreateVisibility;
   String? Function(BuildContext, String?)?
@@ -166,12 +174,25 @@ class AuthPageModel extends FlutterFlowModel {
   void dispose() {
     unfocusNode.dispose();
     tabBarController?.dispose();
+    emailLoginFocusNode?.dispose();
     emailLoginController?.dispose();
+
+    passwordLoginFocusNode?.dispose();
     passwordLoginController?.dispose();
+
+    usernameCreateFocusNode?.dispose();
     usernameCreateController?.dispose();
+
+    emailCreateFocusNode?.dispose();
     emailCreateController?.dispose();
+
+    photoNumberCreateFocusNode?.dispose();
     photoNumberCreateController?.dispose();
+
+    passwordCreateFocusNode?.dispose();
     passwordCreateController?.dispose();
+
+    passwordConfirmationCreateFocusNode?.dispose();
     passwordConfirmationCreateController?.dispose();
   }
 

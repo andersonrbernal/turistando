@@ -1,163 +1,150 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import '../../flutter_flow/flutter_flow_util.dart';
-import '../cloud_functions/cloud_functions.dart';
-
+import '/flutter_flow/flutter_flow_util.dart';
 import 'api_manager.dart';
 
 export 'api_manager.dart' show ApiCallResponse;
 
 const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 
-/// Start RapidAPI  Tourist Attraction Group Code
+/// Start Tourist Attraction API Group Code
 
-class RapidAPITouristAttractionGroup {
-  static TypeHeadCall typeHeadCall = TypeHeadCall();
-  static DetailCall detailCall = DetailCall();
-  static SearchCall searchCall = SearchCall();
-  static PhotosCall photosCall = PhotosCall();
+class TouristAttractionAPIGroup {
+  static String baseUrl = 'https://tourist-attraction.p.rapidapi.com';
+  static Map<String, String> headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'X-RapidAPI-Key': '3da0f2df3bmshdb2eab0365766c7p139ccajsn406201f6bd81',
+    'X-RapidAPI-Host': 'tourist-attraction.p.rapidapi.com',
+  };
+  static TypeaheadCall typeaheadCall = TypeaheadCall();
   static ReviewsCall reviewsCall = ReviewsCall();
-  static CurrenciesCall currenciesCall = CurrenciesCall();
-  static LanguagesCall languagesCall = LanguagesCall();
 }
 
-class TypeHeadCall {
+class TypeaheadCall {
   Future<ApiCallResponse> call({
     String? query = '',
-    String? language = 'en_US',
+    String? lang = 'en_US',
   }) async {
-    final response = await makeCloudCall(
-      _kPrivateApiFunctionName,
-      {
-        'callName': 'TypeHeadCall',
-        'variables': {
-          'query': query,
-          'language': language,
-        },
+    return ApiManager.instance.makeApiCall(
+      callName: 'Typeahead',
+      apiUrl: '${TouristAttractionAPIGroup.baseUrl}/typeahead',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-RapidAPI-Key': '3da0f2df3bmshdb2eab0365766c7p139ccajsn406201f6bd81',
+        'X-RapidAPI-Host': 'tourist-attraction.p.rapidapi.com',
       },
+      params: {
+        'language': lang,
+        'q': query,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
-    return ApiCallResponse.fromCloudCallResponse(response);
   }
-}
 
-class DetailCall {
-  Future<ApiCallResponse> call({
-    String? locationId = '',
-    String? language = 'en_US',
-    String? currency = 'USD',
-  }) async {
-    final response = await makeCloudCall(
-      _kPrivateApiFunctionName,
-      {
-        'callName': 'DetailCall',
-        'variables': {
-          'locationId': locationId,
-          'language': language,
-          'currency': currency,
-        },
-      },
-    );
-    return ApiCallResponse.fromCloudCallResponse(response);
-  }
-}
-
-class SearchCall {
-  Future<ApiCallResponse> call({
-    String? locationId = '',
-    String? language = 'en_US',
-    String? currency = 'USD',
-    String? offset = '0',
-  }) async {
-    final response = await makeCloudCall(
-      _kPrivateApiFunctionName,
-      {
-        'callName': 'SearchCall',
-        'variables': {
-          'locationId': locationId,
-          'language': language,
-          'currency': currency,
-          'offset': offset,
-        },
-      },
-    );
-    return ApiCallResponse.fromCloudCallResponse(response);
-  }
-}
-
-class PhotosCall {
-  Future<ApiCallResponse> call({
-    String? locationId = '',
-    String? language = 'en_US',
-    String? currency = 'USD',
-    String? offset = '0',
-  }) async {
-    final response = await makeCloudCall(
-      _kPrivateApiFunctionName,
-      {
-        'callName': 'PhotosCall',
-        'variables': {
-          'locationId': locationId,
-          'language': language,
-          'currency': currency,
-          'offset': offset,
-        },
-      },
-    );
-    return ApiCallResponse.fromCloudCallResponse(response);
-  }
+  dynamic status(dynamic response) => getJsonField(
+        response,
+        r'''$.status''',
+      );
+  dynamic data(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data''',
+        true,
+      );
+  dynamic location(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data[:].result_object.location_id''',
+        true,
+      );
+  dynamic name(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data[:].result_object.name''',
+        true,
+      );
+  dynamic latitude(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data[:].result_object.latitude''',
+        true,
+      );
+  dynamic longitude(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data[:].result_object.longitude''',
+        true,
+      );
+  dynamic timezone(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data[:].result_object.timezone''',
+        true,
+      );
+  dynamic locationId(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data[:].result_object.location_string''',
+        true,
+      );
+  dynamic images(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data[:].result_object.photo.images''',
+        true,
+      );
+  dynamic ancestors(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data[:].result_object.ancestors''',
+        true,
+      );
+  dynamic resultObject(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data[:].result_object''',
+        true,
+      );
 }
 
 class ReviewsCall {
   Future<ApiCallResponse> call({
     String? locationId = '',
-    String? language = 'en_US',
-    String? currency = 'USD',
     String? offset = '0',
+    String? currency = 'USD',
+    String? lang = 'en_US',
   }) async {
-    final response = await makeCloudCall(
-      _kPrivateApiFunctionName,
-      {
-        'callName': 'ReviewsCall',
-        'variables': {
-          'locationId': locationId,
-          'language': language,
-          'currency': currency,
-          'offset': offset,
-        },
+    return ApiManager.instance.makeApiCall(
+      callName: 'Reviews',
+      apiUrl: '${TouristAttractionAPIGroup.baseUrl}/reviews',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-RapidAPI-Key': '3da0f2df3bmshdb2eab0365766c7p139ccajsn406201f6bd81',
+        'X-RapidAPI-Host': 'tourist-attraction.p.rapidapi.com',
       },
+      params: {
+        'location_id': locationId,
+        'offset': offset,
+        'currency': currency,
+        'language': lang,
+      },
+      bodyType: BodyType.X_WWW_FORM_URL_ENCODED,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
     );
-    return ApiCallResponse.fromCloudCallResponse(response);
   }
+
+  dynamic reviews(dynamic response) => getJsonField(
+        response,
+        r'''$.results.data''',
+        true,
+      );
+  dynamic paging(dynamic response) => getJsonField(
+        response,
+        r'''$.results.paging''',
+      );
 }
 
-class CurrenciesCall {
-  Future<ApiCallResponse> call() async {
-    final response = await makeCloudCall(
-      _kPrivateApiFunctionName,
-      {
-        'callName': 'CurrenciesCall',
-        'variables': {},
-      },
-    );
-    return ApiCallResponse.fromCloudCallResponse(response);
-  }
-}
-
-class LanguagesCall {
-  Future<ApiCallResponse> call() async {
-    final response = await makeCloudCall(
-      _kPrivateApiFunctionName,
-      {
-        'callName': 'LanguagesCall',
-        'variables': {},
-      },
-    );
-    return ApiCallResponse.fromCloudCallResponse(response);
-  }
-}
-
-/// End RapidAPI  Tourist Attraction Group Code
+/// End Tourist Attraction API Group Code
 
 class ApiPagingParams {
   int nextPageNumber = 0;

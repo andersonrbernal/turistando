@@ -14,3 +14,5 @@ export '/pages/auth_pages/reset_password_page/reset_password_page_widget.dart'
     show ResetPasswordPageWidget;
 export '/pages/user_pages/change_phone_settings_page/change_phone_settings_page_widget.dart'
     show ChangePhoneSettingsPageWidget;
+export '/pages/tourism_pages/tourist_attraction_reviews_page/tourist_attraction_reviews_page_widget.dart'
+    show TouristAttractionReviewsPageWidget;

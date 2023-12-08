@@ -7,8 +7,9 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import '/widgets/not_found/not_found_widget.dart';
 import '/widgets/tourist_attraction/tourist_attraction_widget.dart';
 import '/widgets/user_header/user_header_widget.dart';
-import '/flutter_flow/random_data_util.dart' as random_data;
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -38,7 +39,49 @@ class _TouristAttractionsPageWidgetState
 
     logFirebaseEvent('screen_view',
         parameters: {'screen_name': 'TouristAttractionsPage'});
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      logFirebaseEvent('TOURIST_ATTRACTIONS_TouristAttractionsPa');
+      logFirebaseEvent('TouristAttractionsPage_backend_call');
+      _model.typeaheadPageLoadResponse =
+          await TouristAttractionAPIGroup.typeaheadCall.call(
+        query: 'las',
+      );
+      if ((_model.typeaheadPageLoadResponse?.succeeded ?? true)) {
+        logFirebaseEvent('TouristAttractionsPage_update_page_state');
+        setState(() {
+          _model.touristPoints = TouristAttractionAPIGroup.typeaheadCall
+              .resultObject(
+                (_model.typeaheadPageLoadResponse?.jsonBody ?? ''),
+              )!
+              .toList()
+              .cast<dynamic>();
+        });
+      } else {
+        logFirebaseEvent('TouristAttractionsPage_alert_dialog');
+        await showDialog(
+          context: context,
+          builder: (alertDialogContext) {
+            return AlertDialog(
+              title: Text('Something went wrong'),
+              content:
+                  Text('We couldn\'t find any tourist attractions for you.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(alertDialogContext),
+                  child: Text('Ok'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
+
     _model.searchFieldController ??= TextEditingController();
+    _model.searchFieldFocusNode ??= FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -50,10 +93,21 @@ class _TouristAttractionsPageWidgetState
 
   @override
   Widget build(BuildContext context) {
+    if (isiOS) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarBrightness: Theme.of(context).brightness,
+          systemStatusBarContrastEnforced: true,
+        ),
+      );
+    }
+
     context.watch<FFAppState>();
 
     return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
       child: WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
@@ -115,7 +169,48 @@ class _TouristAttractionsPageWidgetState
                                       child: TextFormField(
                                         controller:
                                             _model.searchFieldController,
-                                        textInputAction: TextInputAction.send,
+                                        focusNode: _model.searchFieldFocusNode,
+                                        onFieldSubmitted: (_) async {
+                                          logFirebaseEvent(
+                                              'TOURIST_ATTRACTIONS_SearchField_ON_TEXTF');
+                                          var _shouldSetState = false;
+                                          logFirebaseEvent(
+                                              'SearchField_backend_call');
+                                          _model.searchTouristAttractionsResponse =
+                                              await TouristAttractionAPIGroup
+                                                  .typeaheadCall
+                                                  .call(
+                                            query: _model
+                                                .searchFieldController.text,
+                                          );
+                                          _shouldSetState = true;
+                                          if ((_model
+                                                  .searchTouristAttractionsResponse
+                                                  ?.succeeded ??
+                                              true)) {
+                                            logFirebaseEvent(
+                                                'SearchField_update_page_state');
+                                            setState(() {
+                                              _model.touristPoints =
+                                                  TouristAttractionAPIGroup
+                                                      .typeaheadCall
+                                                      .resultObject(
+                                                        (_model.searchTouristAttractionsResponse
+                                                                ?.jsonBody ??
+                                                            ''),
+                                                      )!
+                                                      .toList()
+                                                      .cast<dynamic>();
+                                            });
+                                          } else {
+                                            if (_shouldSetState)
+                                              setState(() {});
+                                            return;
+                                          }
+
+                                          if (_shouldSetState) setState(() {});
+                                        },
+                                        textInputAction: TextInputAction.search,
                                         obscureText: false,
                                         decoration: InputDecoration(
                                           isDense: true,
@@ -172,33 +267,36 @@ class _TouristAttractionsPageWidgetState
                           onPressed: () async {
                             logFirebaseEvent(
                                 'TOURIST_ATTRACTIONS_SearchButton_ON_TAP');
+                            var _shouldSetState = false;
                             logFirebaseEvent('SearchButton_backend_call');
-                            _model.response =
-                                await RapidAPITouristAttractionGroup
-                                    .typeHeadCall
+                            _model.searchButtonTouristAttractionsResponse =
+                                await TouristAttractionAPIGroup.typeaheadCall
                                     .call(
                               query: _model.searchFieldController.text,
                             );
-                            if ((_model.response?.succeeded ?? true)) {
+                            _shouldSetState = true;
+                            if ((_model.searchButtonTouristAttractionsResponse
+                                    ?.succeeded ??
+                                true)) {
                               logFirebaseEvent(
-                                  'SearchButton_update_widget_state');
+                                  'SearchButton_update_page_state');
                               setState(() {
-                                _model.touristPoints = getJsonField(
-                                  (_model.response?.jsonBody ?? ''),
-                                  r'''$.results.data''',
-                                )!
-                                    .toList()
-                                    .cast<dynamic>();
+                                _model.touristPoints =
+                                    TouristAttractionAPIGroup.typeaheadCall
+                                        .resultObject(
+                                          (_model.searchButtonTouristAttractionsResponse
+                                                  ?.jsonBody ??
+                                              ''),
+                                        )!
+                                        .toList()
+                                        .cast<dynamic>();
                               });
                             } else {
-                              logFirebaseEvent(
-                                  'SearchButton_update_widget_state');
-                              setState(() {
-                                _model.touristPoints = [];
-                              });
+                              if (_shouldSetState) setState(() {});
+                              return;
                             }
 
-                            setState(() {});
+                            if (_shouldSetState) setState(() {});
                           },
                         ),
                       ],
@@ -217,9 +315,8 @@ class _TouristAttractionsPageWidgetState
                   Expanded(
                     child: Builder(
                       builder: (context) {
-                        final touristItems =
-                            _model.touristPoints.toList().take(20).toList();
-                        if (touristItems.isEmpty) {
+                        final touristPointsList = _model.touristPoints.toList();
+                        if (touristPointsList.isEmpty) {
                           return Center(
                             child: NotFoundWidget(
                               title: FFLocalizations.of(context).getText(
@@ -233,56 +330,125 @@ class _TouristAttractionsPageWidgetState
                         }
                         return ListView.builder(
                           padding: EdgeInsets.zero,
-                          shrinkWrap: true,
                           scrollDirection: Axis.vertical,
-                          itemCount: touristItems.length,
-                          itemBuilder: (context, touristItemsIndex) {
-                            final touristItemsItem =
-                                touristItems[touristItemsIndex];
-                            return Container(
-                              height: 200.0,
-                              decoration: BoxDecoration(),
-                              child: wrapWithModel(
-                                model: _model.touristAttractionModels.getModel(
-                                  getJsonField(
-                                    touristItemsItem,
-                                    r'''$.result_object.location_id''',
-                                  ).toString(),
-                                  touristItemsIndex,
-                                ),
-                                updateCallback: () => setState(() {}),
-                                child: Hero(
-                                  tag: getJsonField(
-                                    touristItemsItem,
-                                    r'''$.result_object.location_id''',
-                                  ).toString(),
-                                  transitionOnUserGestures: true,
-                                  child: TouristAttractionWidget(
-                                    key: Key(
-                                      'Keyl0p_${getJsonField(
-                                        touristItemsItem,
-                                        r'''$.result_object.location_id''',
-                                      ).toString()}',
+                          itemCount: touristPointsList.length,
+                          itemBuilder: (context, touristPointsListIndex) {
+                            final touristPointsListItem =
+                                touristPointsList[touristPointsListIndex];
+                            return InkWell(
+                              splashColor: Colors.transparent,
+                              focusColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () async {
+                                logFirebaseEvent(
+                                    'TOURIST_ATTRACTIONS_Container_15lmop5i_O');
+                                logFirebaseEvent('Container_navigate_to');
+
+                                context.pushNamed(
+                                  'TouristAttractionDetailsPage',
+                                  queryParameters: {
+                                    'title': serializeParam(
+                                      getJsonField(
+                                        touristPointsListItem,
+                                        r'''$.name''',
+                                      ).toString(),
+                                      ParamType.String,
                                     ),
-                                    imageUrl: getJsonField(
-                                      touristItemsItem,
-                                      r'''$.photo.images.thumbnail.url''',
+                                    'timezone': serializeParam(
+                                      getJsonField(
+                                        touristPointsListItem,
+                                        r'''$.timezone''',
+                                      ).toString(),
+                                      ParamType.String,
                                     ),
-                                    location: getJsonField(
-                                      touristItemsItem,
-                                      r'''$.result_object.location_string''',
+                                    'imageUrl': serializeParam(
+                                      getJsonField(
+                                        touristPointsListItem,
+                                        r'''$.photo.images.medium.url''',
+                                      ),
+                                      ParamType.String,
+                                    ),
+                                    'location': serializeParam(
+                                      functions.formatLocation(
+                                          getJsonField(
+                                            touristPointsListItem,
+                                            r'''$.latitude''',
+                                          ).toString(),
+                                          getJsonField(
+                                            touristPointsListItem,
+                                            r'''$.longitude''',
+                                          ).toString()),
+                                      ParamType.LatLng,
+                                    ),
+                                    'locationId': serializeParam(
+                                      getJsonField(
+                                        touristPointsListItem,
+                                        r'''$.location_id''',
+                                      ).toString(),
+                                      ParamType.String,
+                                    ),
+                                    'description': serializeParam(
+                                      getJsonField(
+                                        touristPointsListItem,
+                                        r'''$.description''',
+                                      ).toString(),
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                );
+                              },
+                              child: Container(
+                                height: 200.0,
+                                decoration: BoxDecoration(),
+                                child: wrapWithModel(
+                                  model:
+                                      _model.touristAttractionModels.getModel(
+                                    getJsonField(
+                                      touristPointsListItem,
+                                      r'''$.location_id''',
                                     ).toString(),
-                                    name: getJsonField(
-                                      touristItemsItem,
-                                      r'''$.result_object.name''',
+                                    touristPointsListIndex,
+                                  ),
+                                  updateCallback: () => setState(() {}),
+                                  updateOnChange: true,
+                                  child: Hero(
+                                    tag: getJsonField(
+                                      touristPointsListItem,
+                                      r'''$.location_id''',
                                     ).toString(),
-                                    description: getJsonField(
-                                      touristItemsItem,
-                                      r'''$.result_object.description''',
-                                    ).toString(),
-                                    stars: random_data
-                                        .randomDouble(0.0, 5.0)
-                                        .toString(),
+                                    transitionOnUserGestures: true,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: TouristAttractionWidget(
+                                        key: Key(
+                                          'Keyn0v_${getJsonField(
+                                            touristPointsListItem,
+                                            r'''$.location_id''',
+                                          ).toString()}',
+                                        ),
+                                        imageUrl: getJsonField(
+                                          touristPointsListItem,
+                                          r'''$.photo.images.small.url''',
+                                        ),
+                                        location: getJsonField(
+                                          touristPointsListItem,
+                                          r'''$.location''',
+                                        ).toString(),
+                                        name: getJsonField(
+                                          touristPointsListItem,
+                                          r'''$.name''',
+                                        ).toString(),
+                                        timezone: getJsonField(
+                                          touristPointsListItem,
+                                          r'''$.timezone''',
+                                        ).toString(),
+                                        locationString: getJsonField(
+                                          touristPointsListItem,
+                                          r'''$.location_string''',
+                                        ).toString(),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
